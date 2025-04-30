@@ -9,9 +9,10 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/pwa/init.ts"></script>
     <script>
 
-      if (navigator.serviceWorker ) {
+      if (navigator.serviceWorker && false) {
 
         const siteName = `%VITE_SITE_NAME%`;
         navigator.serviceWorker.addEventListener('controllerchange', (ev) => {
