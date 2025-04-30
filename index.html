@@ -11,7 +11,7 @@
     <script type="module" src="/src/main.tsx"></script>
     <script>
 
-      if (navigator.serviceWorker && false) {
+      if (navigator.serviceWorker ) {
 
         const siteName = `%VITE_SITE_NAME%`;
         navigator.serviceWorker.addEventListener('controllerchange', (ev) => {
@@ -21,7 +21,8 @@
 
         if (location.hostname === 'localhost') {
           navigator.serviceWorker.register('/sw.js').then(registrationEvent => {
-            if (registrationEvent.active.state === 'activated') {
+            console.log(registrationEvent)
+            if (registrationEvent.active && registrationEvent.active.state === 'activated') {
               console.log( `Service worker already activated`);
             }
           });
