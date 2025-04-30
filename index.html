@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <title>Service Worker cache</title>
   </head>
   <body>
     <div id="root"></div>
@@ -12,35 +12,7 @@
     <script type="module" src="/src/pwa/init.ts"></script>
     <script>
 
-      if (navigator.serviceWorker && false) {
 
-        const siteName = `%VITE_SITE_NAME%`;
-        navigator.serviceWorker.addEventListener('controllerchange', (ev) => {
-          //the service worker has been updated needs to reload the page
-          window.location.reload();
-        });
-
-        if (location.hostname === 'localhost') {
-          navigator.serviceWorker.register('/sw.js').then(registrationEvent => {
-            console.log(registrationEvent)
-            if (registrationEvent.active && registrationEvent.active.state === 'activated') {
-              console.log( `Service worker already activated`);
-            }
-          });
-          console.log(`Service worker registered `);
-        } else {
-          navigator.serviceWorker.register('/Rotem-fortune/sw.js', { scope: '/Rotem-fortune/' });
-
-        }
-        if (siteName !== 'RotemForturne') {
-          // this is for development purposes only when accessing localhost://5173
-          console.log('site name is not RotemForturne');
-          navigator.serviceWorker.ready.then((registration) => {
-            registration.unregister();
-          });
-
-        }
-      }
 
       const customPrompt = document.createElement('div');
 

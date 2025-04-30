@@ -1,7 +1,7 @@
 import packageJson from '../../package.json'
 const projectName = packageJson.name
 
-console.log(`Project name: ${projectName}`)
+
 
 export function init() {
   if ('serviceWorker' in navigator) {
@@ -11,7 +11,7 @@ export function init() {
       navigator.serviceWorker
         .register(`${BASE_URL}sw.js`, { scope: BASE_URL })
         .then(registration => {
-          console.log('SW registered:', registration);
+          console.log( `SW registered: for project ${projectName}` );
 
           // Handle updates
           registration.addEventListener('updatefound', () => {

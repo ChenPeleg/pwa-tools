@@ -2,10 +2,10 @@
 importScripts("./sw-utils.js");
 
 const DEBUG_MODE = true;
-const CACHING_STRATEGY = ServiceWorkerConstants.cachingStrategy.cacheFirst;
+const CACHING_STRATEGY = ServiceWorkerConstants.cachingStrategy.networkFirst;
 
 const swConstants = // eslint-disable-next-line no-undef
-    new ServiceWorkerConstants({version: "version_09"});
+    new ServiceWorkerConstants({version: "version_01"});
 
 // eslint-disable-next-line no-undef
 class Debug extends ServiceWorkerDebug {}
