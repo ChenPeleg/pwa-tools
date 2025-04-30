@@ -1,4 +1,6 @@
-
+import packageJson from '../../package.json'
+const projectName = packageJson.name
+console.log(`Project name: ${projectName}`)
 export function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     const BASE_URL = location.hostname === 'localhost' ? '/' : '/Rotem-fortune/';
@@ -24,3 +26,4 @@ export function registerServiceWorker() {
     });
   }
 }
+registerServiceWorker()
