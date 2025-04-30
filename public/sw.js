@@ -2,6 +2,8 @@
 importScripts('./sw-utils.js');
 
 const DEBUG_MODE = true;
+const CACHING_STRATEGY =  ServiceWorkerConstants.cachingStrategy.cacheFirst;
+
 
 const swConstants = // eslint-disable-next-line no-undef
     new ServiceWorkerConstants({ version: 'version_09' });
@@ -60,6 +62,11 @@ const fetchEventHandler = async (fetchEvent) => {
         const cachedResponse = await caches.match(fetchEvent.request);
         if (cachedResponse) {
             Debug.debounceLog('[Service Worker] From cache: ' + fetchEvent.request.url);
+            switch (CACHING_STRATEGY) {
+                case ServiceWorkerConstants.cachingStrategy.cacheFirst:
+                    return cachedResponse;
+
+            }
             return cachedResponse;
         } else {
             const responseFromFetch = await fetch(fetchEvent.request);

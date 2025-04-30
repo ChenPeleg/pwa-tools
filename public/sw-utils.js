@@ -1,8 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class ServiceWorkerConstants {
+    static cachingStrategy = {
+        cacheFirst: 'cacheFirst',
+        networkFirst: 'networkFirst',
+        staleWhileRevalidate: 'staleWhileRevalidate',
+        networkOnly: 'networkOnly',
+    };
     static  APP_PREFIX = 'rtmfort_';
-    version = 'version_00';
-
+    version = 'version_01';
     constructor({version}) {
         this.version = version;
     }
@@ -27,13 +32,13 @@ class ServiceWorkerConstants {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class ServiceWorkerDebug {
-    static isDebugMode = false;
+    static isDebugMode = true;
     static intervalId = null;
     static logsRecord = [];
     static debounceTime = 1000;
 
     static isLoggingToConsole() {
-        return self.location.hostname === 'localhost' && !ServiceWorkerDebug.isDebugMode;
+        return self.location.hostname === 'localhost' && ServiceWorkerDebug.isDebugMode;
     }
 
     static log(...args) {
