@@ -9,5 +9,84 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+
+      if (navigator.serviceWorker && false) {
+
+        const siteName = `%VITE_SITE_NAME%`;
+        navigator.serviceWorker.addEventListener('controllerchange', (ev) => {
+          //the service worker has been updated needs to reload the page
+          window.location.reload();
+        });
+
+        if (location.hostname === 'localhost') {
+          navigator.serviceWorker.register('/sw.js').then(registrationEvent => {
+            if (registrationEvent.active.state === 'activated') {
+              console.log( `Service worker already activated`);
+            }
+          });
+          console.log(`Service worker registered `);
+        } else {
+          navigator.serviceWorker.register('/Rotem-fortune/sw.js', { scope: '/Rotem-fortune/' });
+
+        }
+        if (siteName !== 'RotemForturne') {
+          // this is for development purposes only when accessing localhost://5173
+          console.log('site name is not RotemForturne');
+          navigator.serviceWorker.ready.then((registration) => {
+            registration.unregister();
+          });
+
+        }
+      }
+
+      const customPrompt = document.createElement('div');
+
+
+      customPrompt.innerHTML = `<div class="install-app-prompt"><div  dir="rtl" class="inner-prompt">
+<span>התקנת כאפליקציה</span><div class="buttons-container"><button id="approve-install-btn"> אישור</button>
+<button  id="disapprove-install-btn"> רק בדפדפן</button>
+</div>
+        </div>
+        </div>`;
+
+      let installPrompt = null;
+
+      const appendToBody = () => {
+        if (window.location.hash !== '#install') {
+          // return;
+        }
+
+        if (localStorage.getItem('install-prompt') === 'disapproved') {
+          return;
+        }
+        document.body.appendChild(customPrompt);
+        document.querySelector('#disapprove-install-btn').addEventListener('click', () => {
+          localStorage.setItem('install-prompt', 'disapproved');
+          customPrompt.setAttribute('hidden', '');
+        });
+        document.querySelector('#approve-install-btn').addEventListener('click', async () => {
+          if (!installPrompt) {
+            return;
+          }
+          const result = await installPrompt.prompt();
+          console.log(`Install prompt was: ${result.outcome}`);
+          installPrompt = null;
+
+          customPrompt.setAttribute('hidden', '');
+        });
+
+      };
+
+
+
+      window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        installPrompt = event;
+        appendToBody();
+      });
+
+
+    </script>
   </body>
 </html>
