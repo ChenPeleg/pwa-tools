@@ -50,6 +50,18 @@ const installEventHandler = async () => {
     return self.skipWaiting();
 };
 
+const cacheSelfAndAssets = async () => {
+    Debug.log("[Service Worker] Caching self and assets...");
+    const cache = await caches.open(swConstants.CACHE_CORE_NAME);
+    const cacheAssets = [
+        '/',
+        '/index.html',
+        '/sw.js',
+        '/sw-utils.js'
+    ];
+    await cache.addAll(cacheAssets);
+    Debug.log("[Service Worker] Assets cached");
+}
 /**
  * @param {FetchEvent} fetchEvent
  * @return {Promise<FetchEvent>}
