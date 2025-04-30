@@ -47,21 +47,22 @@ const activateEventHandler = async (activationEvent) => {
  */
 const installEventHandler = async () => {
     Debug.log(`[Service Worker] Installing Service Worker ${swConstants.swName}`);
+    if (CACHING_STRATEGY !== ServiceWorkerConstants.cachingStrategy.networkOnly) {
+        Debug.log("[Service Worker] Caching self and assets...");
+        const cache = await caches.open(swConstants.CACHE_CORE_NAME);
+        const cacheAssets = [
+            '/',
+            '/index.html',
+            '/sw.js',
+            '/sw-utils.js'
+        ];
+        await cache.addAll(cacheAssets);
+        Debug.log("[Service Worker] Assets cached");
+    }
     return self.skipWaiting();
 };
 
-const cacheSelfAndAssets = async () => {
-    Debug.log("[Service Worker] Caching self and assets...");
-    const cache = await caches.open(swConstants.CACHE_CORE_NAME);
-    const cacheAssets = [
-        '/',
-        '/index.html',
-        '/sw.js',
-        '/sw-utils.js'
-    ];
-    await cache.addAll(cacheAssets);
-    Debug.log("[Service Worker] Assets cached");
-}
+
 /**
  * @param {FetchEvent} fetchEvent
  * @return {Promise<FetchEvent>}
