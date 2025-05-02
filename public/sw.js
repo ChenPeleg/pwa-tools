@@ -92,14 +92,14 @@ const fetchEventHandler = async (fetchEvent) => {
 
       case ServiceWorkerConfig.cachingStrategy.networkFirst:
         try {
-          // Try network first
+
           Debug.debounceLog(
             "[Service Worker] Network First - Trying network: " +
               fetchEvent.request.url
           );
           const networkResponse = await fetch(fetchEvent.request);
 
-          // Cache the fresh response
+
           const cache = await caches.open(CACHE_NAME);
           if (!fetchEvent.request.url.includes("@")) {
             Debug.log(
@@ -111,7 +111,7 @@ const fetchEventHandler = async (fetchEvent) => {
 
           return networkResponse;
         } catch (error) {
-          // Network failed, try cache
+
           Debug.log(
             "[Service Worker] Network First - Network failed, using cache: " +
               fetchEvent.request.url
@@ -119,15 +119,16 @@ const fetchEventHandler = async (fetchEvent) => {
           if (cachedResponse) {
             return cachedResponse;
           }
-          // If no cache, propagate the error
+
           throw error;
         }
 
       case ServiceWorkerConfig.cachingStrategy.staleWhileRevalidate:
-        // Start network fetch in the background
+
         const fetchPromise = fetch(fetchEvent.request)
           .then((networkResponse) => {
             const cache = caches.open(CACHE_NAME).then((cache) => {
+              // don't cache in development mode (the @ is used for the vite server files)
               if (!fetchEvent.request.url.includes("@")) {
                 Debug.log(
                   "[Service Worker] Stale While Revalidate - Updating cache: " +
