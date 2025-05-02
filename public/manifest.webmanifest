@@ -1,0 +1,18 @@
+{
+  "name": "עתידות רותם",
+  "short_name": "עתידות רותם",
+  "description": "Forturne teller for Rotem",
+  "scope": "/Rotem-fortune/",
+  "start_url": "/Rotem-fortune/",
+  "background_color": "#9b6ee8",
+  "theme_color": "#9b6ee8",
+  "display": "standalone",
+
+  "icons": [
+      {
+        "src": "/Rotem-fortune/splash.png",
+        "type": "image/png",
+        "sizes": "700x700"
+      }
+  ]
+}
