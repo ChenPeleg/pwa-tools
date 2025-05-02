@@ -52,11 +52,7 @@ class InstallPromptManager {
     this.language = language;
   }
   
-  /**
-   * Get the singleton instance of InstallPromptManager
-   * @param language The language to use for the prompt
-   * @returns The singleton instance
-   */
+
   public static getInstance(language: PromptLanguage = 'he'): InstallPromptManager {
     if (!InstallPromptManager.instance) {
       InstallPromptManager.instance = new InstallPromptManager(language);
@@ -64,10 +60,7 @@ class InstallPromptManager {
     return InstallPromptManager.instance;
   }
   
-  /**
-   * Check if instance already exists
-   * @returns True if instance exists, false otherwise
-   */
+
   public static hasInstance(): boolean {
     return InstallPromptManager.instance !== null;
   }
@@ -79,10 +72,7 @@ class InstallPromptManager {
       this.showInstallPrompt();
     });
   }
-  
-  /**
-   * Create custom prompt element based on selected language
-   */
+
   private createCustomPrompt(): HTMLDivElement {
     const text = this.textContent[this.language];
     const customPrompt = document.createElement('div');
@@ -107,7 +97,7 @@ class InstallPromptManager {
    * Show the custom prompt
    */
   private showInstallPrompt(): void {
-    if (window.location.hash !== '#install' && true) {
+    if (window.location.hash !== '#install') {
       // Condition commented out but kept for future reference
     }
   
