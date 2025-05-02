@@ -1,25 +1,25 @@
-import packageJson from '../../package.json'
-
-const projectName = packageJson.name
-
-
-export function init() {
+const init = () =>  {
     if ('serviceWorker' in navigator) {
         const BASE_URL = import.meta.env.BASE_URL;
         window.addEventListener('load', () => {
             navigator.serviceWorker
                 .register(`${BASE_URL}sw.js`, {scope: BASE_URL})
                 .then(registration => {
-                    console.log(`SW registered: for project ${projectName}`);
 
-                    // Handle updates
+                    /**
+                     * @description  Fires when the service worker registration acquires a new installing worker
+                     * This occurs when a new service worker is detected and begins installation
+                     */
                     registration.addEventListener('updatefound', () => {
                         const newWorker = registration.installing as ServiceWorker;
 
+                        /**
+                         * @description Tracks changes in the service worker lifecycle state
+                         * States include 'installing', 'installed', 'activating', 'activated', 'redundant'
+                         */
                         newWorker.addEventListener('statechange', () => {
                             if (newWorker.state === 'activated') {
-                                // Show update notification instead of forcing reload
-                                // showUpdateNotification();
+                            // can show a notification to the user
                             }
                         });
                     });
