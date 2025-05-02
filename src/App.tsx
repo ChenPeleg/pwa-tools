@@ -10,9 +10,9 @@ function App() {
       <div>
       
       </div>
-      <h1>Service workers</h1>
+      <h1>PWA Tools</h1>
       <div className="card">
-         11:50
+
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
