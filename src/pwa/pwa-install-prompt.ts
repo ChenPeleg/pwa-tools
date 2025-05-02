@@ -67,6 +67,7 @@ class InstallPromptManager {
   }
 
   public initInstallPrompt(): void {
+    console.log('initInstallPrompt')
 
     window.addEventListener('beforeinstallprompt', (event) => {
 
