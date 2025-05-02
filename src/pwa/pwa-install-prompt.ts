@@ -67,7 +67,9 @@ class InstallPromptManager {
   }
 
   public initInstallPrompt(): void {
+
     window.addEventListener('beforeinstallprompt', (event) => {
+
       event.preventDefault();
       this.installPrompt = event as BeforeInstallPromptEvent;
       this.showInstallPrompt();
@@ -103,15 +105,17 @@ class InstallPromptManager {
    * Show the custom prompt
    */
   private showInstallPrompt(): void {
+    console.log('customPrompt')
     if (window.location.hash !== '#install') {
       // Condition commented out but kept for future reference
     }
   
-    if (localStorage.getItem('install-prompt') === 'disapproved') {
+    if (localStorage.getItem('install-prompt2') === 'disapproved') {
       return;
     }
   
     const customPrompt = this.createCustomPrompt();
+
     document.body.appendChild(customPrompt);
   
     document.querySelector('#disapprove-install-btn')?.addEventListener('click', () => {

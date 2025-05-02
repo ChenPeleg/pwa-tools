@@ -1,18 +1,18 @@
 {
-  "name": "עתידות רותם",
-  "short_name": "עתידות רותם",
-  "description": "Forturne teller for Rotem",
-  "scope": "/Rotem-fortune/",
-  "start_url": "/Rotem-fortune/",
+  "name": "pwa-tools",
+  "short_name": "pwa-tools",
+  "description": "Simple PWA tools for devs",
+  "scope": "/pwa-tools/",
+  "start_url": "/pwa-tools/",
   "background_color": "#9b6ee8",
   "theme_color": "#9b6ee8",
   "display": "standalone",
 
   "icons": [
       {
-        "src": "/Rotem-fortune/splash.png",
+        "src": "/pwa-tools/splash.png",
         "type": "image/png",
-        "sizes": "700x700"
+        "sizes": "657x660"
       }
   ]
 }
