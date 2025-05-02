@@ -67,7 +67,7 @@ class InstallPromptManager {
   }
 
   public initInstallPrompt(): void {
-    console.log('initInstallPrompt')
+ 
 
     window.addEventListener('beforeinstallprompt', (event) => {
 
@@ -80,6 +80,9 @@ class InstallPromptManager {
   private createCustomPrompt(): HTMLDivElement {
     const text = this.textContent[this.language];
     const customPrompt = document.createElement('div');
+    customPrompt.style.position = 'fixed';
+    customPrompt.style.width = '100%';
+    customPrompt.style.height = '100%';
     const shadowPrompt = customPrompt.attachShadow({ mode: 'open' });
 
 
@@ -106,7 +109,7 @@ class InstallPromptManager {
    * Show the custom prompt
    */
   private showInstallPrompt(): void {
-    console.log('customPrompt')
+  
     if (window.location.hash !== '#install') {
       // Condition commented out but kept for future reference
     }
@@ -116,6 +119,7 @@ class InstallPromptManager {
     }
   
     const customPrompt = this.createCustomPrompt();
+    console.log('Custom prompt created:', customPrompt);
 
     document.body.appendChild(customPrompt);
   

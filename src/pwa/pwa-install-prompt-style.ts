@@ -1,7 +1,8 @@
 export const pwaInstallPromptStyle = `  .install-app-prompt {
-        position: absolute;
-        top: 10vh;
+        position: absolute;  
+        background-color: rgba(0, 0, 0, 0.2);
         width: 100vw;
+        height: 100vh;
         z-index: 1000;
         display: flex;
         flex-direction: row;
