@@ -1,9 +1,5 @@
-/**
- * PWA Caching functionality
- * Handles service worker registration and caching for offline use
- */
 
-const applyCaching = () => {
+export const pwaApplyCaching = () => {
   if ('serviceWorker' in navigator) {
     const BASE_URL = import.meta.env.BASE_URL;
     window.addEventListener('load', () => {
@@ -32,6 +28,4 @@ const applyCaching = () => {
         .catch(error => console.error('SW registration failed:', error));
     });
   }
-};
-
-export { applyCaching };
+}

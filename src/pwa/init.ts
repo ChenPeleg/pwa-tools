@@ -1,9 +1,9 @@
 
-import { applyCaching } from './apply-caching';
+import {addInstallPrompt} from './pwa-install-prompt.ts';
+import {pwaApplyCaching} from './pwa-caching.ts';
 
 
-  // Initialize installation prompt functionality with specified language
 
-  // Initialize service worker and caching
-  applyCaching();
+addInstallPrompt({language: 'he'});
+pwaApplyCaching();
 
