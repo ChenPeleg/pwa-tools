@@ -25,10 +25,12 @@ interface PromptText {
 
 
 class InstallPromptManager {
+  // Singleton instance
+  private static instance: InstallPromptManager | null = null;
 
   private installPrompt: BeforeInstallPromptEvent | null = null;
 
-  private language: PromptLanguage = 'he';
+  private readonly language: PromptLanguage = 'he';
 
   private readonly textContent: Record<PromptLanguage, PromptText> = {
     en: {
@@ -42,14 +44,35 @@ class InstallPromptManager {
       onlyBrowser: 'רק בדפדפן'
     }
   };
-  constructor(language: PromptLanguage = 'he') {
+  
+  /**
+   * Private constructor to prevent direct instantiation
+   */
+  private constructor(language: PromptLanguage = 'he') {
     this.language = language;
   }
   
+  /**
+   * Get the singleton instance of InstallPromptManager
+   * @param language The language to use for the prompt
+   * @returns The singleton instance
+   */
+  public static getInstance(language: PromptLanguage = 'he'): InstallPromptManager {
+    if (!InstallPromptManager.instance) {
+      InstallPromptManager.instance = new InstallPromptManager(language);
+    }
+    return InstallPromptManager.instance;
+  }
+  
+  /**
+   * Check if instance already exists
+   * @returns True if instance exists, false otherwise
+   */
+  public static hasInstance(): boolean {
+    return InstallPromptManager.instance !== null;
+  }
 
-  public initInstallPrompt( ): void {
-
-    
+  public initInstallPrompt(): void {
     window.addEventListener('beforeinstallprompt', (event) => {
       event.preventDefault();
       this.installPrompt = event as BeforeInstallPromptEvent;
@@ -113,9 +136,15 @@ class InstallPromptManager {
   }
 }
 
-// Create and export a singleton instance
-export const addInstallPrompt = ({language } : {language: PromptLanguage}) => {
-const installPromptManager = new InstallPromptManager(language);
-    installPromptManager.initInstallPrompt();
+// Export a function to create and initialize the singleton instance
+export const addInstallPrompt = ({ language }: { language: PromptLanguage }) => {
+  // Abort if an instance already exists
+  if (InstallPromptManager.hasInstance()) {
+    console.log('Install prompt manager instance already exists, aborting initialization');
+    return;
+  }
+  
+  const installPromptManager = InstallPromptManager.getInstance(language);
+  installPromptManager.initInstallPrompt();
 }
 
