@@ -1,66 +1,17 @@
 <!doctype html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Service Worker cache</title>
   </head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/pwa/init.ts"></script>
     <script type="module" src="/src/main.tsx"></script>
-    <script>
-
-
-
-      const customPrompt = document.createElement('div');
-
-
-      customPrompt.innerHTML = `<div class="install-app-prompt"><div  dir="rtl" class="inner-prompt">
-<span>התקנת כאפליקציה</span><div class="buttons-container"><button id="approve-install-btn"> אישור</button>
-<button  id="disapprove-install-btn"> רק בדפדפן</button>
-</div>
-        </div>
-        </div>`;
-
-      let installPrompt = null;
-
-      const appendToBody = () => {
-        if (window.location.hash !== '#install') {
-          // return;
-        }
-
-        if (localStorage.getItem('install-prompt') === 'disapproved') {
-          return;
-        }
-        document.body.appendChild(customPrompt);
-        document.querySelector('#disapprove-install-btn').addEventListener('click', () => {
-          localStorage.setItem('install-prompt', 'disapproved');
-          customPrompt.setAttribute('hidden', '');
-        });
-        document.querySelector('#approve-install-btn').addEventListener('click', async () => {
-          if (!installPrompt) {
-            return;
-          }
-          const result = await installPrompt.prompt();
-          console.log(`Install prompt was: ${result.outcome}`);
-          installPrompt = null;
-
-          customPrompt.setAttribute('hidden', '');
-        });
-
-      };
-
-
-
-      window.addEventListener('beforeinstallprompt', (event) => {
-        event.preventDefault();
-        installPrompt = event;
-        appendToBody();
-      });
-
-
-    </script>
   </body>
+
 </html>
