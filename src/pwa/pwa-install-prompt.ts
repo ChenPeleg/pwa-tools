@@ -2,8 +2,9 @@
  * PWA Installation functionality
  * Handles the custom installation prompt and installation process
  */
+import {pwaInstallPromptStyle} from './pwa-install-prompt-style.ts';
 
-// Define the BeforeInstallPromptEvent interface since it's not standard
+  // Define the BeforeInstallPromptEvent interface since it's not standard
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
   readonly userChoice: Promise<{
@@ -76,11 +77,16 @@ class InstallPromptManager {
   private createCustomPrompt(): HTMLDivElement {
     const text = this.textContent[this.language];
     const customPrompt = document.createElement('div');
-    
+    const shadowPrompt = customPrompt.attachShadow({ mode: 'open' });
+
+
     // Set direction attribute based on language
     const direction = this.language === 'he' ? 'rtl' : 'ltr';
-    
-    customPrompt.innerHTML = `<div class="install-app-prompt">
+
+    shadowPrompt.innerHTML = `<style>
+         ${pwaInstallPromptStyle}
+        </style>
+    <div class="install-app-prompt">
       <div dir="${direction}" class="inner-prompt">
         <span>${text.installAsApp}</span>
         <div class="buttons-container">
