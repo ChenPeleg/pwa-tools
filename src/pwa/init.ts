@@ -1,32 +1,32 @@
 import packageJson from '../../package.json'
+
 const projectName = packageJson.name
 
 
-
 export function init() {
-  if ('serviceWorker' in navigator) {
-    const BASE_URL = location.hostname === 'localhost' ? '/' : '/Rotem-fortune/';
+    if ('serviceWorker' in navigator) {
+        const BASE_URL = import.meta.env.BASE_URL;
+        window.addEventListener('load', () => {
+            navigator.serviceWorker
+                .register(`${BASE_URL}sw.js`, {scope: BASE_URL})
+                .then(registration => {
+                    console.log(`SW registered: for project ${projectName}`);
 
-    window.addEventListener('load', () => {
-      navigator.serviceWorker
-        .register(`${BASE_URL}sw.js`, { scope: BASE_URL })
-        .then(registration => {
-          console.log( `SW registered: for project ${projectName}` );
+                    // Handle updates
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing as ServiceWorker;
 
-          // Handle updates
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing as ServiceWorker;
-
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'activated') {
-                // Show update notification instead of forcing reload
-               // showUpdateNotification();
-              }
-            });
-          });
-        })
-        .catch(error => console.error('SW registration failed:', error));
-    });
-  }
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'activated') {
+                                // Show update notification instead of forcing reload
+                                // showUpdateNotification();
+                            }
+                        });
+                    });
+                })
+                .catch(error => console.error('SW registration failed:', error));
+        });
+    }
 }
+
 init()

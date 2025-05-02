@@ -8,7 +8,7 @@ class ServiceWorkerConstants {
     };
     static  APP_PREFIX = 'rtmfort_';
     version = 'version_01';
-    constructor({version}) {
+    constructor({version, appName}) {
         this.version = version;
     }
 
@@ -16,7 +16,6 @@ class ServiceWorkerConstants {
 
     get swName() {
         return ServiceWorkerConstants._swName;
-
     }
 
     get CACHE_CORE_NAME() {
