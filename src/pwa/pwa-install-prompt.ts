@@ -119,16 +119,18 @@ class InstallPromptManager {
     }
   
     const customPrompt = this.createCustomPrompt();
-    console.log('Custom prompt created:', customPrompt);
-
+ 
+ 
+    const shadowRoot = customPrompt.shadowRoot;
+    
     document.body.appendChild(customPrompt);
-  
-    document.querySelector('#disapprove-install-btn')?.addEventListener('click', () => {
+   
+    shadowRoot?.querySelector('#disapprove-install-btn')?.addEventListener('click', () => {
       localStorage.setItem('install-prompt', 'disapproved');
       customPrompt.setAttribute('hidden', '');
     });
   
-    document.querySelector('#approve-install-btn')?.addEventListener('click', async () => {
+    shadowRoot?.querySelector('#approve-install-btn')?.addEventListener('click', async () => {
       if (!this.installPrompt) {
         return;
       }
