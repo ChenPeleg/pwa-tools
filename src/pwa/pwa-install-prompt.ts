@@ -94,6 +94,7 @@ class InstallPromptManager {
         </style>
     <div class="install-app-prompt">
       <div dir="${direction}" class="inner-prompt">
+        <img src="/splash.png" alt="App Icon" class="app-icon" />
         <span>${text.installAsApp}</span>
         <div class="buttons-container">
           <button id="approve-install-btn"> ${text.approve}</button>
@@ -114,7 +115,7 @@ class InstallPromptManager {
       // Condition commented out but kept for future reference
     }
   
-    if (localStorage.getItem('install-prompt2') === 'disapproved') {
+    if (localStorage.getItem('install-prompt') === 'disapproved') {
       return;
     }
   
