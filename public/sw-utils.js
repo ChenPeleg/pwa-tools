@@ -1,29 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class ServiceWorkerConstants {
+class ServiceWorkerConfig {
     static cachingStrategy = {
         cacheFirst: 'cacheFirst',
         networkFirst: 'networkFirst',
         staleWhileRevalidate: 'staleWhileRevalidate',
         networkOnly: 'networkOnly',
-    };
-    static  APP_PREFIX = 'rtmfort_';
-    version = 'version_01';
-    constructor({version, appName}) {
-        this.version = version;
-    }
-
-    static _swName = 'Rotem-fortune';
-
-    get swName() {
-        return ServiceWorkerConstants._swName;
-    }
-
-    get CACHE_CORE_NAME() {
-        return ServiceWorkerConstants.APP_PREFIX + 'core'; // core
-    }
-
-    get CACHE_NAME() {
-        return ServiceWorkerConstants.APP_PREFIX + this.version;
     };
 
 }
@@ -31,7 +12,7 @@ class ServiceWorkerConstants {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class ServiceWorkerDebug {
-    static isDebugMode = true;
+    static isDebugMode = false;
     static intervalId = null;
     static logsRecord = [];
     static debounceTime = 1000;
