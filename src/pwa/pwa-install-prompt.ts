@@ -3,8 +3,10 @@
  * Handles the custom installation prompt and installation process
  */
 import {pwaInstallPromptStyle} from './pwa-install-prompt-style.ts';
-
-  // Define the BeforeInstallPromptEvent interface since it's not standard
+import packageJson from '../../package.json';
+ 
+const PROJECT_NAME = packageJson.name;
+ 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
   readonly userChoice: Promise<{
@@ -115,7 +117,7 @@ class InstallPromptManager {
       // Condition commented out but kept for future reference
     }
   
-    if (localStorage.getItem('install-prompt') === 'disapproved') {
+    if (localStorage.getItem(`${PROJECT_NAME}-install-prompt`) === 'disapproved') {
       return;
     }
   
@@ -127,7 +129,7 @@ class InstallPromptManager {
     document.body.appendChild(customPrompt);
    
     shadowRoot?.querySelector('#disapprove-install-btn')?.addEventListener('click', () => {
-      localStorage.setItem('install-prompt', 'disapproved');
+      localStorage.setItem(`${PROJECT_NAME}-install-prompt`, 'disapproved');
       customPrompt.setAttribute('hidden', '');
     });
   
