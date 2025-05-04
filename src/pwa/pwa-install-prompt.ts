@@ -106,9 +106,7 @@ class InstallPromptManager {
     return customPrompt;
   }
   
-  /**
-   * Show the custom prompt
-   */
+ 
   private showInstallPrompt(): void {
   
     if (window.location.hash !== '#install') {
