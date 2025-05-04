@@ -8,10 +8,11 @@ class Debug extends ServiceWorkerDebug {}
  * Service Worker Handler class that manages all service worker functionality
  */
 class ServiceWorkerHandler {
-  constructor() {
-    this.IS_DEBUG_MODE = true;
-    this.CACHING_STRATEGY = ServiceWorkerConfig.cachingStrategy.networkFirst;
-    this.CACHE_NAME = "sw_cache_v1";
+  constructor({ isDebugMode = true, cachingStrategy, cacheName }) {
+    this.IS_DEBUG_MODE = isDebugMode || false;
+    this.CACHING_STRATEGY =
+      cachingStrategy || ServiceWorkerConfig.cachingStrategy.networkFirst;
+    this.CACHE_NAME = cacheName || "sw_cache_v1";
 
     // Network status tracking with caching
     this.isOffline = false;
@@ -294,4 +295,8 @@ class ServiceWorkerHandler {
   }
 }
 
-new ServiceWorkerHandler();
+new ServiceWorkerHandler({
+  isDebugMode: true,
+  cachingStrategy: ServiceWorkerConfig.cachingStrategy.networkFirst,
+  cacheName: "sw_cache_v1",
+});
