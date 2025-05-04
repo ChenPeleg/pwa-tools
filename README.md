@@ -2,6 +2,10 @@
 
 This project provides simple solutions to enhance your Vite React applications with Progressive Web App (PWA) capabilities, including offline functionality and app installation prompts.
 
+## Latest Updates
+
+**May 4, 2025**: Improved offline detection and updated caching strategies for better performance.
+
 ## Download Latest Release
 
 You can download and extract the latest release using the following command:
@@ -213,6 +217,19 @@ private readonly textContent: Record<PromptLanguage, PromptText> = {
   // Add more languages as needed
 };
 ```
+
+## Testing Offline Functionality
+
+You can test if your application is properly working offline by:
+
+1. Loading your application with network connectivity
+2. Opening the browser's developer tools (F12)
+3. Switching to the "Application" tab
+4. Under "Service Workers", check if your service worker is registered
+5. Disconnect from the internet or enable "Offline" mode in the Network tab
+6. Refresh your application to verify it loads properly without network
+
+The application includes an `offline-check.txt` file that the service worker uses to validate offline capabilities.
 
 ## Compatibility
 
