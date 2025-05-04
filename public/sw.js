@@ -5,20 +5,59 @@ const IS_DEBUG_MODE = true;
 const CACHING_STRATEGY = ServiceWorkerConfig.cachingStrategy.networkFirst;
 const CACHE_NAME = "sw_cache_v1";
 
+// Network status tracking with caching
+let isOffline = false;
+let lastNetworkCheck = 0;
+const NETWORK_CHECK_INTERVAL = 60000; // Check network status at most once per minute
 
 // eslint-disable-next-line no-undef
 class Debug extends ServiceWorkerDebug {}
 
-Debug.isDebugMode =  IS_DEBUG_MODE;
+Debug.isDebugMode = IS_DEBUG_MODE;
+
+// Function to check if we're offline, with time-based caching
+const checkOfflineStatus = async () => {
+  const now = Date.now();
+
+  // Only check network status if it's been more than NETWORK_CHECK_INTERVAL since last check
+  if (now - lastNetworkCheck < NETWORK_CHECK_INTERVAL) {
+    return isOffline;
+  }
+
+  lastNetworkCheck = now;
+
+  try {
+    // Try a quick HEAD request to detect network status
+    const controller = new AbortController();
+    const signal = controller.signal;
+    const timeout = setTimeout(() => controller.abort(), 2000);
+
+    await fetch("./offline-check.txt", {
+      method: "HEAD",
+      cache: "no-store",
+      signal,
+    });
+
+    clearTimeout(timeout);
+    if (isOffline) {
+      Debug.log("[Service Worker] Network is back online");
+      isOffline = false;
+    }
+    return false; // We're online
+  } catch (error) {
+    if (!isOffline) {
+      Debug.log("[Service Worker] Network appears to be offline");
+      isOffline = true;
+    }
+    return true; // We're offline
+  }
+};
 
 const clearCaches = async () => {
   Debug.log("Checking and Clearing old caches...");
   const keys = await caches.keys();
   const allKeysToDelete = keys.filter(function (key) {
-    return (
-      key.indexOf(CACHE_NAME) !== 0 &&
-      key !== CACHE_NAME
-    );
+    return key.indexOf(CACHE_NAME) !== 0 && key !== CACHE_NAME;
   });
   let letCachesFound = 0;
   await Promise.all(
@@ -68,9 +107,7 @@ const installEventHandler = async () => {
  */
 const fetchEventHandler = async (fetchEvent) => {
   const responsePromise = async (fetchEvent) => {
-    if (
-      CACHING_STRATEGY === ServiceWorkerConfig.cachingStrategy.networkOnly
-    ) {
+    if (CACHING_STRATEGY === ServiceWorkerConfig.cachingStrategy.networkOnly) {
       Debug.debounceLog(
         "[Service Worker] Network Only: " + fetchEvent.request.url
       );
@@ -91,14 +128,30 @@ const fetchEventHandler = async (fetchEvent) => {
         break;
 
       case ServiceWorkerConfig.cachingStrategy.networkFirst:
-        try {
+        const isNavigationRequest = fetchEvent.request.mode === "navigate";
 
+        if (isNavigationRequest || Math.random() < 0.05) {
+          const offline = await checkOfflineStatus();
+
+          // If offline and we have a cached response, use it right away
+          if (offline && cachedResponse) {
+            Debug.log(
+              "[Service Worker] Network First - Offline mode, using cache: " +
+                fetchEvent.request.url
+            );
+            return cachedResponse;
+          }
+        } else if (isOffline && cachedResponse) {
+          // Use the cached value we already know about offline status
+          return cachedResponse;
+        }
+
+        try {
           Debug.debounceLog(
             "[Service Worker] Network First - Trying network: " +
               fetchEvent.request.url
           );
           const networkResponse = await fetch(fetchEvent.request);
-
 
           const cache = await caches.open(CACHE_NAME);
           if (!fetchEvent.request.url.includes("@")) {
@@ -111,6 +164,10 @@ const fetchEventHandler = async (fetchEvent) => {
 
           return networkResponse;
         } catch (error) {
+          // If network request fails, we might be offline
+          // Mark as offline to skip checks on subsequent requests
+          isOffline = true;
+          lastNetworkCheck = Date.now();
 
           Debug.log(
             "[Service Worker] Network First - Network failed, using cache: " +
@@ -124,7 +181,6 @@ const fetchEventHandler = async (fetchEvent) => {
         }
 
       case ServiceWorkerConfig.cachingStrategy.staleWhileRevalidate:
-
         const fetchPromise = fetch(fetchEvent.request)
           .then((networkResponse) => {
             const cache = caches.open(CACHE_NAME).then((cache) => {
@@ -165,9 +221,8 @@ const fetchEventHandler = async (fetchEvent) => {
     }
 
     // Default behavior for cacheFirst or when no cached response exists:
-    // Fetch from network, cache the response, and return
     const responseFromFetch = await fetch(fetchEvent.request);
-    const cache = await caches.open( CACHE_NAME);
+    const cache = await caches.open(CACHE_NAME);
     if (!fetchEvent.request.url.includes("@")) {
       // don't cache in development mode (the @ is used for the vite server files)
       Debug.log("[Service Worker] Caching resource: " + fetchEvent.request.url);
@@ -186,6 +241,16 @@ self.addEventListener("install", installEventHandler);
 
 self.addEventListener("fetch", fetchEventHandler);
 
+// Update network status via message
 self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "NETWORK_STATUS") {
+    isOffline = event.data.offline;
+    lastNetworkCheck = Date.now();
+    Debug.log(
+      `[Service Worker] Network status updated: ${
+        isOffline ? "offline" : "online"
+      }`
+    );
+  }
   console.log(event);
 });
