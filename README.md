@@ -2,6 +2,21 @@
 
 This project provides simple solutions to enhance your Vite React applications with Progressive Web App (PWA) capabilities, including offline functionality and app installation prompts.
 
+## Download Latest Release
+
+You can download and extract the latest release using the following command:
+
+```bash
+curl -s https://api.github.com/repos/ChenPeleg/pwa-tools/releases/latest | grep "browser_download_url.*zip" | cut -d : -f 2,3 | tr -d \" | wget -qi - && unzip pwa-tools-package.zip && rm pwa-tools-package.zip
+```
+
+This command will:
+1. Fetch the latest release information
+2. Extract the download URL for the zip file
+3. Download the zip file
+4. Extract its contents
+5. Remove the zip file after extraction
+
 ## Features
 
 - ✅ Offline-first functionality with multiple caching strategies
