@@ -57,8 +57,22 @@ class ServiceWorkerHandler {
 
     this.lastNetworkCheck = now;
 
+    if (typeof navigator !== "undefined" && "onLine" in navigator) {
+      const nativeOfflineStatus = !navigator.onLine;
+
+      if (nativeOfflineStatus) {
+        // If browser reports offline, trust it and skip fetch attempt
+        if (!this.isOffline) {
+          Debug.log(
+            "[Service Worker] Browser reports offline via navigator.onLine"
+          );
+          this.isOffline = true;
+        }
+        return true;
+      }
+    }
+
     try {
-      // Try a quick HEAD request to detect network status
       const controller = new AbortController();
       const signal = controller.signal;
       const timeout = setTimeout(() => controller.abort(), 2000);
