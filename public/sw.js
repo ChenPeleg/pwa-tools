@@ -77,6 +77,7 @@ class ServiceWorkerHandler {
       const signal = controller.signal;
       const timeout = setTimeout(() => controller.abort(), 2000);
 
+      // Use a dedicated lightweight file for network checks instead of the manifest
       await fetch("./offline-check.txt", {
         method: "HEAD",
         cache: "no-store",

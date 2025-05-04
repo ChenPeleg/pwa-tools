@@ -124,6 +124,7 @@ jobs:
           cp public/sw-utils.js pwa-tools-package/public/
           cp public/manifest.webmanifest pwa-tools-package/public/
           cp public/splash.png pwa-tools-package/public/
+          cp public/offline-check.txt pwa-tools-package/public/
           
           cp src/pwa/init.ts pwa-tools-package/src/pwa/
           cp src/pwa/pwa-install-prompt.ts pwa-tools-package/src/pwa/
@@ -160,6 +161,7 @@ jobs:
           echo "│   ├── sw.js - Main service worker file" >> release-notes.md
           echo "│   ├── sw-utils.js - Service worker utility functions" >> release-notes.md
           echo "│   ├── manifest.webmanifest - Web app manifest file" >> release-notes.md
+          echo "│   ├── offline-check.txt - Lightweight file for offline detection" >> release-notes.md
           echo "│   └── splash.png - Default splash screen image" >> release-notes.md
           echo "└── src/" >> release-notes.md
           echo "    └── pwa/" >> release-notes.md

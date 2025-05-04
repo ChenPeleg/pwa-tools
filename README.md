@@ -4,7 +4,7 @@ This project provides simple solutions to enhance your Vite React applications w
 
 ## Latest Updates
 
-**May 4, 2025**: Improved offline detection and updated caching strategies for better performance.
+**May 4, 2025**: Improved offline detection using dedicated lightweight check file and updated caching strategies for better performance.
 
 ## Download Latest Release
 
@@ -22,6 +22,7 @@ This command will:
 ## Features
 
 - ✅ Offline-first functionality with multiple caching strategies
+- ✅ Enhanced offline detection with reduced network overhead
 - ✅ Easy integration with existing Vite React projects
 - ✅ Customizable PWA installation prompt
 - ✅ Multi-language support for installation UI
