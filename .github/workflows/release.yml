@@ -25,6 +25,94 @@ jobs:
               --title="PWA Tools $tag" \
               --generate-notes
       
+      - name: Create Installation README
+        run: |
+          cat > pwa-tools-installation.md << 'EOF'
+          # PWA Tools Installation Guide
+
+          This package contains files to quickly add PWA capabilities to your web application.
+
+          ## Installation Instructions
+
+          Follow these steps to integrate the PWA tools into your project:
+
+          ### 1. Copy the public files to your project's public directory
+
+          ```bash
+          # For npm/vite projects
+          cp -r pwa-tools-package/public/* ./public/
+
+          # For create-react-app projects
+          cp -r pwa-tools-package/public/* ./public/
+
+          # For Next.js projects
+          cp -r pwa-tools-package/public/* ./public/
+
+          # For Angular projects
+          cp -r pwa-tools-package/public/* ./src/assets/
+          ```
+
+          ### 2. Copy the TypeScript source files
+
+          ```bash
+          # For most projects with src directory
+          mkdir -p ./src/pwa
+          cp -r pwa-tools-package/src/pwa/* ./src/pwa/
+
+          # For Next.js projects
+          mkdir -p ./app/pwa
+          cp -r pwa-tools-package/src/pwa/* ./app/pwa/
+          ```
+
+          ### 3. Register the service worker
+
+          Add the following code to your main entry file (e.g., main.tsx, main.js, index.js):
+
+          ```javascript
+          import { registerServiceWorker } from './pwa/init';
+
+          // Call at the end of your main file
+          registerServiceWorker();
+          ```
+
+          ### 4. Add the install prompt to your app
+
+          ```javascript
+          import { initInstallPrompt } from './pwa/pwa-install-prompt';
+
+          // Call this in your app component or main layout
+          initInstallPrompt();
+          ```
+
+          ### 5. Update your html file
+
+          Make sure your HTML file includes:
+
+          ```html
+          <link rel="manifest" href="/manifest.webmanifest">
+          <meta name="theme-color" content="#ffffff">
+          ```
+
+          ## File Descriptions
+
+          - `public/sw.js`: Main service worker file that handles caching and offline capabilities
+          - `public/sw-utils.js`: Helper functions for the service worker
+          - `public/manifest.webmanifest`: Web app manifest defining app appearance on devices
+          - `public/splash.png`: Default splash screen image for when your app launches
+          - `src/pwa/init.ts`: Service worker registration and lifecycle management
+          - `src/pwa/pwa-install-prompt.ts`: Logic for showing PWA installation prompt
+          - `src/pwa/pwa-install-prompt-style.ts`: Styles for the install prompt UI
+          - `src/pwa/pwa-caching.ts`: Caching strategies for different types of assets
+
+          ## Customization
+
+          1. Edit `manifest.webmanifest` to customize app name, colors, and icons
+          2. Modify `sw.js` to adjust caching strategies
+          3. Update `pwa-install-prompt-style.ts` to match your app's design
+          
+          For more documentation, visit the [PWA Tools repository](https://github.com/YOUR_USERNAME/pwa-tools)
+          EOF
+      
       - name: Create ZIP Archive with Original Folder Structure
         run: |
           # Create a temporary directory for the package
@@ -41,6 +129,9 @@ jobs:
           cp src/pwa/pwa-install-prompt.ts pwa-tools-package/src/pwa/
           cp src/pwa/pwa-install-prompt-style.ts pwa-tools-package/src/pwa/
           cp src/pwa/pwa-caching.ts pwa-tools-package/src/pwa/
+          
+          # Copy the installation README to the package root
+          cp pwa-tools-installation.md pwa-tools-package/README.md
           
           # Create the ZIP file
           zip -r pwa-tools-package.zip pwa-tools-package
@@ -64,6 +155,7 @@ jobs:
           echo "### Files Included" >> release-notes.md
           echo "```" >> release-notes.md
           echo "pwa-tools-package/" >> release-notes.md
+          echo "├── README.md - Installation instructions with shell commands" >> release-notes.md
           echo "├── public/" >> release-notes.md
           echo "│   ├── sw.js - Main service worker file" >> release-notes.md
           echo "│   ├── sw-utils.js - Service worker utility functions" >> release-notes.md
@@ -77,6 +169,6 @@ jobs:
           echo "        └── pwa-caching.ts - Caching strategies" >> release-notes.md
           echo "```" >> release-notes.md
           echo "" >> release-notes.md
-          echo "See the README.md file for installation and usage instructions." >> release-notes.md
+          echo "See the README.md file included in the package for detailed installation and usage instructions." >> release-notes.md
           gh release edit "$tag" --notes-file release-notes.md
 
