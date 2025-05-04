@@ -62,7 +62,7 @@ export const pwaInstallPromptStyle = `  .install-app-prompt {
             }
 
             button#approve-install-btn {
-                background-color: #8b6ddf;
+                background-color: LinkText;
                 color: white;
             }
         }
