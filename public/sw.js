@@ -8,7 +8,7 @@ class Debug extends ServiceWorkerDebug {}
  * Service Worker Handler class that manages all service worker functionality
  */
 class ServiceWorkerHandler {
-  constructor(  ) {
+  constructor() {
     this.IS_DEBUG_MODE = true;
     this.CACHING_STRATEGY = ServiceWorkerConfig.cachingStrategy.networkFirst;
     this.CACHE_NAME = "sw_cache_v1";
@@ -33,6 +33,8 @@ class ServiceWorkerHandler {
 
   /**
    * Register all service worker event listeners
+   * @returns {void}
+   * @memberof ServiceWorkerHandler
    */
   registerEventListeners() {
     self.addEventListener("activate", this.activateEventHandler);
@@ -292,5 +294,4 @@ class ServiceWorkerHandler {
   }
 }
 
-// Initialize the service worker handler
 new ServiceWorkerHandler();
