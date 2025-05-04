@@ -7,7 +7,7 @@ This project provides simple solutions to enhance your Vite React applications w
 You can download and extract the latest release using the following command:
 
 ```bash
-curl -s https://api.github.com/repos/ChenPeleg/pwa-tools/releases/latest | grep "browser_download_url.*zip" | cut -d : -f 2,3 | tr -d \" | wget -qi - && unzip pwa-tools-package.zip && rm pwa-tools-package.zip
+curl -L -o pwa-tools-package.zip https://github.com/ChenPeleg/pwa-tools/releases/latest/download/pwa-tools-package.zip
 ```
 
 This command will:
