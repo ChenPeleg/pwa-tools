@@ -221,3 +221,8 @@ This solution works with Vite 4+ and React 18+. It uses standard Service Worker 
 ## License
 
 MIT
+
+
+## To-Do
+
+Make the sw.js file cleaner and more readable. Maybe use a class to encapsulate the logic and make it more modular. This will help in maintaining the code and adding new features in the future.

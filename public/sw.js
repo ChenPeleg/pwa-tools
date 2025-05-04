@@ -15,11 +15,9 @@ class Debug extends ServiceWorkerDebug {}
 
 Debug.isDebugMode = IS_DEBUG_MODE;
 
-// Function to check if we're offline, with time-based caching
 const checkOfflineStatus = async () => {
   const now = Date.now();
 
-  // Only check network status if it's been more than NETWORK_CHECK_INTERVAL since last check
   if (now - lastNetworkCheck < NETWORK_CHECK_INTERVAL) {
     return isOffline;
   }
@@ -128,21 +126,15 @@ const fetchEventHandler = async (fetchEvent) => {
         break;
 
       case ServiceWorkerConfig.cachingStrategy.networkFirst:
-        const isNavigationRequest = fetchEvent.request.mode === "navigate";
+        // Check offline status regardless of request type
+        const offline = await checkOfflineStatus();
 
-        if (isNavigationRequest || Math.random() < 0.05) {
-          const offline = await checkOfflineStatus();
-
-          // If offline and we have a cached response, use it right away
-          if (offline && cachedResponse) {
-            Debug.log(
-              "[Service Worker] Network First - Offline mode, using cache: " +
-                fetchEvent.request.url
-            );
-            return cachedResponse;
-          }
-        } else if (isOffline && cachedResponse) {
-          // Use the cached value we already know about offline status
+        // If offline and we have a cached response, use it right away
+        if (offline && cachedResponse) {
+          Debug.log(
+            "[Service Worker] Network First - Offline mode, using cache: " +
+              fetchEvent.request.url
+          );
           return cachedResponse;
         }
 
