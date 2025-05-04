@@ -1,0 +1,47 @@
+name: Create release
+
+on:
+  push:
+    tags:
+      - v*
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release pushed tag
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check if on main branch
+        run: |
+          if [ "${GITHUB_REF##*/}" != "main" ]; then
+            echo "Not on main branch, exiting..."
+            exit 0
+          fi
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
+              --generate-notes
+      - name: check folder structure
+        run: |
+      - name: concatenate version number to file
+        env:
+          tag: ${{ github.ref_name }}
+        #         echo "// $tag \n" >> temp.txt
+        run: |
+          cat src/client.js >> temp.txt
+          mv temp.txt applinksClient.js
+      - name: Add artifacts to the release 2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          gh release upload "$tag" applinksClient.js --clobber
+
