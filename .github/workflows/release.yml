@@ -1,4 +1,4 @@
-name: Create release
+name: Create PWA Tools Release
 
 on:
   push:
@@ -10,38 +10,80 @@ permissions:
 
 jobs:
   release:
-    name: Release pushed tag
-    runs-on: ubuntu-22.04
+    name: Release PWA Tools
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Check if on main branch
-        run: |
-          if [ "${GITHUB_REF##*/}" != "main" ]; then
-            echo "Not on main branch, exiting..."
-            exit 0
-          fi
-      - name: Create release
+      
+      - name: Create Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
         run: |
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
-              --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
+              --title="PWA Tools $tag" \
               --generate-notes
-      - name: check folder structure
+      
+      - name: Create Assets Directory
+        run: mkdir -p release-assets
+      
+      - name: Prepare Service Worker Files
         run: |
-      - name: concatenate version number to file
-        env:
-          tag: ${{ github.ref_name }}
-        #         echo "// $tag \n" >> temp.txt
+          cp public/sw.js release-assets/
+          cp public/sw-utils.js release-assets/
+          cp public/manifest.webmanifest release-assets/
+          cp public/splash.png release-assets/
+      
+      - name: Prepare PWA Source Files
         run: |
-          cat src/client.js >> temp.txt
-          mv temp.txt applinksClient.js
-      - name: Add artifacts to the release 2
+          mkdir -p release-assets/src/pwa
+          cp src/pwa/init.ts release-assets/src/pwa/
+          cp src/pwa/pwa-install-prompt.ts release-assets/src/pwa/
+          cp src/pwa/pwa-install-prompt-style.ts release-assets/src/pwa/
+          cp src/pwa/pwa-caching.ts release-assets/src/pwa/
+      
+      - name: Create Archive of All Files
+        run: |
+          cd release-assets
+          zip -r ../pwa-tools-package.zip ./*
+          cd ..
+      
+      - name: Upload Individual Files to Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
         run: |
-          gh release upload "$tag" applinksClient.js --clobber
+          gh release upload "$tag" public/sw.js --clobber
+          gh release upload "$tag" public/sw-utils.js --clobber
+          gh release upload "$tag" public/manifest.webmanifest --clobber
+          gh release upload "$tag" public/splash.png --clobber
+          gh release upload "$tag" src/pwa/init.ts --clobber
+          gh release upload "$tag" src/pwa/pwa-install-prompt.ts --clobber
+          gh release upload "$tag" src/pwa/pwa-install-prompt-style.ts --clobber
+          gh release upload "$tag" src/pwa/pwa-caching.ts --clobber
+          gh release upload "$tag" pwa-tools-package.zip --clobber
+      
+      - name: Add README to Release Description
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          echo "## Files Included in this Release" > release-notes.md
+          echo "" >> release-notes.md
+          echo "### Service Worker Files" >> release-notes.md
+          echo "- \`sw.js\` - Main service worker file" >> release-notes.md
+          echo "- \`sw-utils.js\` - Service worker utility functions" >> release-notes.md
+          echo "- \`manifest.webmanifest\` - Web app manifest file" >> release-notes.md
+          echo "- \`splash.png\` - Default splash screen image" >> release-notes.md
+          echo "" >> release-notes.md
+          echo "### PWA Source Files" >> release-notes.md
+          echo "- \`src/pwa/init.ts\` - Service worker registration" >> release-notes.md
+          echo "- \`src/pwa/pwa-install-prompt.ts\` - Install prompt logic" >> release-notes.md
+          echo "- \`src/pwa/pwa-install-prompt-style.ts\` - Install prompt styling" >> release-notes.md
+          echo "- \`src/pwa/pwa-caching.ts\` - Caching strategies" >> release-notes.md
+          echo "" >> release-notes.md
+          echo "### Complete Package" >> release-notes.md
+          echo "- \`pwa-tools-package.zip\` - All PWA files in a single ZIP archive" >> release-notes.md
+          gh release edit "$tag" --notes-file release-notes.md
 
