@@ -13,9 +13,7 @@ curl -L -o pwa-tools-package.zip https://github.com/ChenPeleg/pwa-tools/releases
 This command will:
 1. Fetch the latest release information
 2. Extract the download URL for the zip file
-3. Download the zip file
-4. Extract its contents
-5. Remove the zip file after extraction
+3. Download the zip file 
 
 ## Features
 
