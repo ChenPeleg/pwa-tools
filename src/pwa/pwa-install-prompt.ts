@@ -27,8 +27,7 @@ interface PromptText {
 }
 
 
-class InstallPromptManager {
-  // Singleton instance
+class InstallPromptManager { 
   private static instance: InstallPromptManager | null = null;
 
   private installPrompt: BeforeInstallPromptEvent | null = null;
@@ -87,8 +86,7 @@ class InstallPromptManager {
     customPrompt.style.height = '100%';
     const shadowPrompt = customPrompt.attachShadow({ mode: 'open' });
 
-
-    // Set direction attribute based on language
+ 
     const direction = this.language === 'he' ? 'rtl' : 'ltr';
 
     shadowPrompt.innerHTML = `<style>
@@ -114,7 +112,7 @@ class InstallPromptManager {
   private showInstallPrompt(): void {
   
     if (window.location.hash !== '#install') {
-      // Condition commented out but kept for future reference
+ 
     }
   
     if (localStorage.getItem(`${PROJECT_NAME}-install-prompt`) === 'disapproved') {
@@ -146,9 +144,8 @@ class InstallPromptManager {
   }
 }
 
-// Export a function to create and initialize the singleton instance
-export const addInstallPrompt = ({ language }: { language: PromptLanguage }) => {
-  // Abort if an instance already exists
+ 
+export const addInstallPrompt = ({ language }: { language: PromptLanguage }) => { 
   if (InstallPromptManager.hasInstance()) {
     console.log('Install prompt manager instance already exists, aborting initialization');
     return;
